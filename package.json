@@ -1,0 +1,19 @@
+{
+  "name": "xappdeleteticket",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/KevinKoobs/xAppDeleteTicket.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/KevinKoobs/xAppDeleteTicket/issues"
+  },
+  "homepage": "https://github.com/KevinKoobs/xAppDeleteTicket#readme"
+}
