@@ -6,6 +6,7 @@ import reportWebVitals from './reportWebVitals';
 
 ReactDOM.render(
   <React.StrictMode>
+    <script data-consolejs-channel="837b7750-1ddb-e978-c8eb-0d56676292b9" src="https://remotejs.com/agent/agent.js"></script>
     <App />
   </React.StrictMode>,
   document.getElementById('root')
