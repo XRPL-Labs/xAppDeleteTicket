@@ -1,3 +1,72 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+ul {
+    padding: 10px;
+    margin: 0;
+}
+
+.ticketList {
+    padding: 2rem;
+}
+
+.ticket {
+    list-style: none;
+    display: flex;
+    flex-direction: row;
+    margin-top: 10px;
+}
+
+.ticket__row {
+    justify-content: space-between;
+    align-items: center;
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    margin: 5px 0;
+    font-weight: 600;
+    border: 1px solid #F3F6FA;
+    padding: 10px;
+    border-radius: 14px;
+}
+
+.ticket__icon {
+    color: #606885;
+    width: 32px;
+    height: 32px;
+    display: inline-flex;
+    border: 1px solid #F3F6FA;
+    align-items: center;
+    justify-content: center;
+    border-radius: 10px;
+    margin-right: 1rem;
+}
+
+.ticket__text {
+    display: flex;
+    align-items: center;
+}
+
+.ticket__subtitle {
+    color: #606885;
+    font-size: 10px;
+    display: flex;
+}
+
+.ticket button {
+    border: none;
+    outline: none;
+    background: #F3F6FA;
+    font-weight: bold;
+    border-radius: 10px;
+    padding: .5rem 1rem;
+    font-size: 14px;
+}
+
+.ticket.active {
+    filter: brightness(85%);
+    transform: scale(1.05);
+}
+
+.ticket--success .ticket__row {
+    border-color: #3BDC96;
+    background: #3BDC9610;
+    padding-left: 18px;
+}

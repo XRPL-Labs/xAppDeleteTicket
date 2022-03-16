@@ -5,13 +5,15 @@ import * as dotenv from "dotenv";
 import { Link, Outlet, Route, Routes } from 'react-router-dom';
 import ListTickets from './routes/listTickets';
 import { AnyJson, XummJsonTransaction } from 'xumm-sdk/dist/src/types';
+import { XrplClient } from 'xrpl-client';
 
 dotenv.config();
 
 const Sdk = new XummSdkJwt('8b57456f-fb8e-4699-a66c-989253d361d5');
+const client = new XrplClient();
 
 function messageHandler(event: any) {
-  alert(JSON.stringify(event.data));
+  // alert(JSON.stringify(event.data));
 }
 
 if (typeof window.addEventListener === 'function') {
@@ -54,9 +56,23 @@ function App() {
     return true;
   }
 
+  const [tickets, setTickets] = useState([]);
+
+  useEffect(() => {
+    client.send({
+      command: "account_objects",
+      account: user?.account,
+    }).then(tickets => {
+      const accountObjects = tickets.account_objects.filter((ticket: any) => {
+        return ticket.LedgerEntryType === 'Ticket'
+      })
+      setTickets(accountObjects);
+
+    });
+  }, [user])
 
   return (
-    <div>
+    <div id="app" >
       {/* <h1>Basic Example</h1>
 
       <p>
@@ -84,7 +100,34 @@ function App() {
           </Route>
         </Routes>
       }
-    </div>
+      <div>
+        <ul className="ticketList">
+          <h2>Ticket list</h2>
+
+          {tickets.length > 0 && tickets?.map((ticket: any) => {
+            return <li className="ticket" key={ticket.index}>
+              <div className="ticket__row">
+                <div className="ticket__text">
+                  <span className="ticket__icon">i</span>
+                  <span>
+                    Ticket <br />
+                    <span className="ticket__subtitle">2 XRP reserve</span>
+                  </span>
+                </div> <button onClick={() => deleteTicket(ticket.TicketSequence)}>Delete</button>
+              </div>
+            </li>
+          })}
+
+          {tickets.length !== 0 &&
+            <li className="ticket ticket--success">
+              <div className="ticket__row">
+                No tickets found
+              </div>
+            </li>
+          }
+        </ul>
+      </div >
+    </div >
   );
 }
 
@@ -93,13 +136,6 @@ function Layout() {
     <div className='font-sans'>
       {/* A "layout route" is a good place to put markup you want to
           share across all the pages on your site, like navigation. */}
-      <nav>
-        <ul>
-          <li>
-            <Link to="/list-tickets">List Tickets</Link>
-          </li>
-        </ul>
-      </nav>
 
       {/* An <Outlet> renders whatever child route is currently active,
           so you can think about this <Outlet> as a placeholder for
@@ -112,7 +148,6 @@ function Layout() {
 function Home() {
   return (
     <div>
-      <h2>Home</h2>
     </div>
   );
 }

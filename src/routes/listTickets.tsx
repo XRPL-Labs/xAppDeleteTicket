@@ -22,10 +22,10 @@ export default function ListTickets(props: any) {
 
     return (
         <div>
-            <h1>Test</h1>
+            <h1 className="text-blue-500">Test</h1>
             <ul>
                 {tickets?.map((ticket: any) => {
-                    return <li key={ticket.index}>
+                    return <li className="ticket" key={ticket.index}>
                         Ticket {ticket.TicketSequence} <button onClick={() => props.deleteTicket(ticket.TicketSequence)}>x</button>
                     </li>
                 })}

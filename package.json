@@ -24,7 +24,7 @@
     "xumm-sdk": "^1.0.6"
   },
   "scripts": {
-    "start": "tailwindcss -m -i ./src/index.css -o ./public/index.css && react-scripts start",
+    "start": "tailwindcss build -m -i ./src/index.css -o ./public/index.css && react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
