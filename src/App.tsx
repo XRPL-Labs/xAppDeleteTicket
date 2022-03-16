@@ -1,9 +1,7 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { XummSdkJwt } from 'xumm-sdk';
 import './App.css';
 import * as dotenv from "dotenv";
-import { Link, Outlet, Route, Routes } from 'react-router-dom';
-import ListTickets from './routes/listTickets';
 import { AnyJson, XummJsonTransaction } from 'xumm-sdk/dist/src/types';
 import { XrplClient } from 'xrpl-client';
 
@@ -12,19 +10,10 @@ dotenv.config();
 const Sdk = new XummSdkJwt('8b57456f-fb8e-4699-a66c-989253d361d5');
 const client = new XrplClient();
 
-function messageHandler(event: any) {
-  // alert(JSON.stringify(event.data));
-}
-
-if (typeof window.addEventListener === 'function') {
-  window.addEventListener("message", messageHandler)
-}
-if (typeof document.addEventListener === 'function') {
-  document.addEventListener("message", messageHandler)
-}
-
 function App() {
   const [user, setUser] = useState<AnyJson>();
+  const [tickets, setTickets] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     Sdk.getOttData().then((c: any) => {
@@ -32,6 +21,41 @@ function App() {
       return false;
     })
   }, [])
+
+  useEffect(() => {
+    fetchObjects();
+  }, [user]);
+
+
+  if (typeof window.addEventListener === 'function') {
+    window.addEventListener("message", messageHandler)
+  }
+  if (typeof document.addEventListener === 'function') {
+    document.addEventListener("message", messageHandler)
+  }
+
+  function messageHandler(event: any) {
+    if (event?.method === 'payloadResolved' && event?.reason === 'SIGNED') {
+      fetchObjects();
+    }
+  }
+
+  function fetchObjects() {
+    if (!user?.account) return;
+    client.send({
+      command: "account_objects",
+      account: user?.account,
+    }).then(tickets => {
+      console.log(tickets);
+      if (tickets && tickets.length === 0) return;
+      const accountObjects = tickets.account_objects.filter((ticket: any) => {
+        return ticket.LedgerEntryType === 'Ticket'
+      })
+      setTickets(accountObjects);
+      setIsLoading(false);
+
+    });
+  }
 
   const deleteTicket = (sequence: Number) => {
     let txJson: XummJsonTransaction = { "TransactionType": "AccountSet" };
@@ -56,32 +80,9 @@ function App() {
     return true;
   }
 
-  const [tickets, setTickets] = useState([]);
-  const [isLoading, setIsLoading] = useState(true);
-
-  useEffect(() => {
-    client.send({
-      command: "account_objects",
-      account: user?.account,
-    }).then(tickets => {
-      const accountObjects = tickets.account_objects.filter((ticket: any) => {
-        return ticket.LedgerEntryType === 'Ticket'
-      })
-      setTickets(accountObjects);
-      setIsLoading(false);
-
-    });
-  }, [user])
 
   return (
     <div id="app" >
-      {user?.account &&
-        <Routes>
-          <Route path="/" element={<Layout />}>
-            <Route index element={<Home />} />
-          </Route>
-        </Routes>
-      }
       <div>
         {isLoading &&
           <div className="loader"></div>
@@ -113,46 +114,5 @@ function App() {
     </div >
   );
 }
-
-function Layout() {
-  return (
-    <div className='font-sans'>
-      {/* A "layout route" is a good place to put markup you want to
-          share across all the pages on your site, like navigation. */}
-
-      {/* An <Outlet> renders whatever child route is currently active,
-          so you can think about this <Outlet> as a placeholder for
-          the child routes we defined above. */}
-      <Outlet />
-    </div>
-  );
-}
-
-function Home() {
-  return (
-    <div>
-    </div>
-  );
-}
-
-function About() {
-  return (
-    <div>
-      <h2>About</h2>
-    </div>
-  );
-}
-
-function NoMatch() {
-  return (
-    <div>
-      <h2>Nothing to see here!</h2>
-      <p>
-        <Link to="/">Go to the home page</Link>
-      </p>
-    </div>
-  );
-}
-
 
 export default App;

@@ -42,6 +42,7 @@ ul {
 
 .ticket__icon::before {
     content: '\0069';
+    color: var(--secondary);
 }
 
 .ticket__text {
