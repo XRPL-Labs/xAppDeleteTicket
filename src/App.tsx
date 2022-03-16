@@ -57,6 +57,7 @@ function App() {
   }
 
   const [tickets, setTickets] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     client.send({
@@ -67,48 +68,30 @@ function App() {
         return ticket.LedgerEntryType === 'Ticket'
       })
       setTickets(accountObjects);
+      setIsLoading(false);
 
     });
   }, [user])
 
   return (
     <div id="app" >
-      {/* <h1>Basic Example</h1>
-
-      <p>
-        This example demonstrates some of the core features of React Router
-        including nested <code>&lt;Route&gt;</code>s,{" "}
-        <code>&lt;Outlet&gt;</code>s, <code>&lt;Link&gt;</code>s, and using a
-        "*" route (aka "splat route") to render a "not found" page when someone
-        visits an unrecognized URL.
-      </p> */}
-
-      {/* Routes nest inside one another. Nested route paths build upon
-            parent route paths, and nested route elements render inside
-            parent route elements. See the note about <Outlet> below. */}
       {user?.account &&
         <Routes>
           <Route path="/" element={<Layout />}>
             <Route index element={<Home />} />
-            <Route path="generate-ticket" element={<About />} />
-            <Route path="/list-tickets" element={<ListTickets user={user} deleteTicket={deleteTicket} />} />
-
-            {/* Using path="*"" means "match anything", so this route
-                acts like a catch-all for URLs that we don't have explicit
-                routes for. */}
-            <Route path="*" element={<NoMatch />} />
           </Route>
         </Routes>
       }
       <div>
+        {isLoading &&
+          <div className="loader"></div>
+        }
         <ul className="ticketList">
-          <h2>Ticket list</h2>
-
           {tickets.length > 0 && tickets?.map((ticket: any) => {
             return <li className="ticket" key={ticket.index}>
               <div className="ticket__row">
                 <div className="ticket__text">
-                  <span className="ticket__icon">i</span>
+                  <span className="ticket__icon"></span>
                   <span>
                     Ticket <br />
                     <span className="ticket__subtitle">2 XRP reserve</span>
@@ -118,10 +101,10 @@ function App() {
             </li>
           })}
 
-          {tickets.length !== 0 &&
+          {tickets.length === 0 &&
             <li className="ticket ticket--success">
               <div className="ticket__row">
-                No tickets found
+                <span className="ticket__icon"></span> No tickets found
               </div>
             </li>
           }
