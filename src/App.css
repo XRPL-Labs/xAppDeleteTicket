@@ -22,9 +22,10 @@ ul {
     width: 100%;
     margin: 5px 0;
     font-weight: 600;
-    border: 1px solid #F3F6FA;
+    border: 1px solid transparent;
     padding: 10px;
     border-radius: 14px;
+    box-shadow: 0 3px 8px rgb(0 0 0 / 10%);
 }
 
 .ticket__icon {
@@ -99,6 +100,17 @@ ul {
     border-radius: 50%;
     border-top-color: #3BDC96;
     animation: fly-in 500ms ease-out, loading 1000ms ease-in-out 500ms infinite;
+}
+
+.buttonLoader {
+    content: '';
+    width: 14px;
+    height: 14px;
+    border: 2px solid #3052FF20;
+    border-top-color: #3BDC96;
+    border-radius: 50%;
+    display: inline-block;
+    animation: loading 1000ms ease-in-out 500ms infinite;
 }
 
 @keyframes fly-in {

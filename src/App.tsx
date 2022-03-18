@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { XummSdkJwt } from 'xumm-sdk';
 import './App.css';
 import * as dotenv from "dotenv";
@@ -18,27 +18,12 @@ function App() {
   useEffect(() => {
     Sdk.getOttData().then((c: any) => {
       setUser(c.account_info);
-      return false;
+    }).catch(e => {
+      console.log('error', e);
     })
   }, [])
 
-  useEffect(() => {
-    fetchObjects();
-  }, [user]);
-
-
-  if (typeof window.addEventListener === 'function') {
-    window.addEventListener("message", messageHandler)
-  }
-  if (typeof document.addEventListener === 'function') {
-    document.addEventListener("message", messageHandler)
-  }
-
-  function messageHandler(event: any) {
-    if (event?.method === 'payloadResolved' && event?.reason === 'SIGNED') {
-      fetchObjects();
-    }
-  }
+  fetchObjects();
 
   function fetchObjects() {
     if (!user?.account) return;
@@ -46,19 +31,19 @@ function App() {
       command: "account_objects",
       account: user?.account,
     }).then(tickets => {
-      console.log(tickets);
       if (tickets && tickets.length === 0) return;
       const accountObjects = tickets.account_objects.filter((ticket: any) => {
         return ticket.LedgerEntryType === 'Ticket'
       })
       setTickets(accountObjects);
       setIsLoading(false);
-
+      return true;
     });
   }
 
   const deleteTicket = (sequence: Number) => {
     let txJson: XummJsonTransaction = { "TransactionType": "AccountSet" };
+    setIsLoading(true);
     if (user && user.account) {
       txJson = {
         "TransactionType": "AccountSet",
@@ -69,12 +54,30 @@ function App() {
     }
 
     Sdk.payload.create(txJson).then((response) => {
+      const wsStatus = response?.refs.websocket_status || '';
+      const uuid = response?.uuid || '';
+      const ws = new WebSocket(wsStatus);
+      ws.onmessage = function (event: any) {
+        const data = JSON.parse(event.data);
+        if (response?.uuid && data.signed) {
+          const payloadStatus = Sdk.payload.get(uuid);
+          payloadStatus.then(r => {
+            if (data.signed === true && r?.meta.resolved === true) {
+              fetchObjects();
+            }
+          });
+        }
+
+
+      }
+
       if (typeof (window as any).ReactNativeWebView !== 'undefined') {
         (window as any).ReactNativeWebView.postMessage(JSON.stringify({
           command: 'openSignRequest',
           uuid: response?.uuid
         }))
       }
+
     });
 
     return true;
@@ -82,35 +85,33 @@ function App() {
 
 
   return (
-    <div id="app" >
-      <div>
-        {isLoading &&
-          <div className="loader"></div>
-        }
-        <ul className="ticketList">
-          {tickets.length > 0 && tickets?.map((ticket: any) => {
-            return <li className="ticket" key={ticket.index}>
-              <div className="ticket__row">
-                <div className="ticket__text">
-                  <span className="ticket__icon"></span>
-                  <span>
-                    Ticket <br />
-                    <span className="ticket__subtitle">2 XRP reserve</span>
-                  </span>
-                </div> <button onClick={() => deleteTicket(ticket.TicketSequence)}>Delete</button>
-              </div>
-            </li>
-          })}
+    <div id="app">
+      {isLoading &&
+        <div className="loader"></div>
+      }
+      <ul className="ticketList">
+        {tickets.length > 0 && tickets?.map((ticket: any) => {
+          return <li className="ticket" key={ticket.index}>
+            <div className="ticket__row">
+              <div className="ticket__text">
+                <span className="ticket__icon"></span>
+                <span>
+                  Ticket {ticket.TicketSequence} <br />
+                  <span className="ticket__subtitle">2 XRP reserve</span>
+                </span>
+              </div> <button onClick={() => deleteTicket(ticket.TicketSequence)}>Delete</button>
+            </div>
+          </li>
+        })}
 
-          {tickets.length === 0 &&
-            <li className="ticket ticket--success">
-              <div className="ticket__row">
-                <span className="ticket__icon"></span> No tickets found
-              </div>
-            </li>
-          }
-        </ul>
-      </div >
+        {tickets.length === 0 &&
+          <li className="ticket ticket--success">
+            <div className="ticket__row">
+              <span className="ticket__icon"></span> No tickets found
+            </div>
+          </li>
+        }
+      </ul>
     </div >
   );
 }
