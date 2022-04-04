@@ -7,10 +7,13 @@ import { XrplClient } from 'xrpl-client';
 
 dotenv.config();
 
-const Sdk = new XummSdkJwt('8b57456f-fb8e-4699-a66c-989253d361d5');
+const url = new URL(window.location.href);
+const xAppToken = url.searchParams.get("xAppToken") || '';
+const Sdk = new XummSdkJwt('8b57456f-fb8e-4699-a66c-989253d361d5', xAppToken);
 const client = new XrplClient();
 
 function App() {
+
   const [user, setUser] = useState<AnyJson>();
   const [tickets, setTickets] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -46,14 +49,21 @@ function App() {
     setIsLoading(true);
     if (user && user.account) {
       txJson = {
-        "TransactionType": "AccountSet",
-        "Account": user?.account || '',
-        "Sequence": 0,
-        "TicketSequence": sequence
+        "TransactionType": "Payment",
+        "Destination": 'rXUMMProAS9qHvxooeJMYz5smAsJZvArh',
+        "Amount": '105',
+        "Account": user?.account || ''
       }
     }
 
+    Sdk.payload.createAndSubscribe(txJson, (response) => {
+      console.log(response);
+
+    })
+
     Sdk.payload.create(txJson).then((response) => {
+      console.log(response);
+      alert(JSON.stringify(response));
       const wsStatus = response?.refs.websocket_status || '';
       const uuid = response?.uuid || '';
       const ws = new WebSocket(wsStatus);
@@ -96,7 +106,7 @@ function App() {
               <div className="ticket__text">
                 <span className="ticket__icon"></span>
                 <span>
-                  Ticket {ticket.TicketSequence} <br />
+                  Ticket<br />
                   <span className="ticket__subtitle">2 XRP reserve</span>
                 </span>
               </div> <button onClick={() => deleteTicket(ticket.TicketSequence)}>Delete</button>
