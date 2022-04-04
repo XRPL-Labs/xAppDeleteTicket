@@ -1,0 +1,139 @@
+ul {
+    padding: 10px;
+    margin: 0;
+}
+
+.ticketList {
+    padding: 2rem;
+}
+
+.ticket {
+    list-style: none;
+    display: flex;
+    flex-direction: row;
+    margin-top: 10px;
+}
+
+.ticket__row {
+    justify-content: space-between;
+    align-items: center;
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    margin: 5px 0;
+    font-weight: 600;
+    border: 1px solid transparent;
+    padding: 10px;
+    border-radius: 14px;
+    box-shadow: 0 3px 8px rgb(0 0 0 / 10%);
+}
+
+.ticket__icon {
+    color: #606885;
+    width: 32px;
+    height: 32px;
+    display: inline-flex;
+    border: 1px solid #F3F6FA;
+    align-items: center;
+    justify-content: center;
+    border-radius: 10px;
+    margin-right: 1rem;
+    position: relative;
+}
+
+.ticket__icon::before {
+    content: '\0069';
+    color: var(--secondary);
+}
+
+.ticket__text {
+    display: flex;
+    align-items: center;
+}
+
+.ticket__subtitle {
+    color: #606885;
+    font-size: 10px;
+    display: flex;
+}
+
+.ticket button {
+    border: none;
+    outline: none;
+    background: #F3F6FA;
+    font-weight: bold;
+    border-radius: 10px;
+    padding: .5rem 1rem;
+    font-size: 14px;
+}
+
+.ticket.active {
+    filter: brightness(85%);
+    transform: scale(1.05);
+}
+
+.ticket--success .ticket__row {
+    border-color: #3BDC96;
+    background: #3BDC9610;
+    padding-left: 18px;
+    justify-content: flex-start;
+}
+
+.ticket--success .ticket__icon::before {
+    content: '\2714';
+}
+
+.loader {
+    position: absolute;
+    display: flex;
+    inset: 0;
+    z-index: 100;
+    background: white;
+    align-items: center;
+    justify-content: center;
+}
+.loader::before {
+    content: '';
+    width: 15vw;
+    height: 15vw;
+    border: 6px solid #3052FF10;
+    border-radius: 50%;
+    border-top-color: #3BDC96;
+    animation: fly-in 500ms ease-out, loading 1000ms ease-in-out 500ms infinite;
+}
+
+.buttonLoader {
+    content: '';
+    width: 14px;
+    height: 14px;
+    border: 2px solid #3052FF20;
+    border-top-color: #3BDC96;
+    border-radius: 50%;
+    display: inline-block;
+    animation: loading 1000ms ease-in-out 500ms infinite;
+}
+
+@keyframes fly-in {
+    0% {
+        transform: scale(0);
+        opacity: 0;
+    }
+    50% {
+        transform: scale(1.25);
+        opacity: 0.4;
+    }
+    75% {
+        transform: scale(0.9);
+        opacity: 0.7;
+    }
+    100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+@keyframes loading {
+    to {
+        transform: rotate(1turn);
+    }
+}
