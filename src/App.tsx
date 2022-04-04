@@ -75,7 +75,6 @@ function App() {
     const resolveData: any = await subscription.resolved;
 
     if (resolveData?.signed) {
-      alert('Signed!');
       setFetchTickets(true);
     } else {
       setFetchTickets(false);
