@@ -1,3 +1,7 @@
+@import './themes/Dark.css';
+@import './themes/Moonlight.css';
+@import './themes/Royal.css';
+
 ul {
     padding: 10px;
     margin: 0;
@@ -15,6 +19,7 @@ ul {
 }
 
 .ticket__row {
+    background-color: rgba(255,255,255,0.1);
     justify-content: space-between;
     align-items: center;
     display: flex;

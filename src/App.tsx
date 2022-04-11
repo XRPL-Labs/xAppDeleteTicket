@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { XummSdkJwt } from 'xumm-sdk';
 import './App.css';
 import * as dotenv from "dotenv";
@@ -9,6 +9,7 @@ dotenv.config();
 
 const url = new URL(window.location.href);
 const xAppToken = url.searchParams.get("xAppToken") || '';
+const theme = url.searchParams.get('xAppStyle') || '';
 const Sdk = new XummSdkJwt('8b57456f-fb8e-4699-a66c-989253d361d5', xAppToken);
 const client = new XrplClient();
 
@@ -85,7 +86,7 @@ function App() {
 
 
   return (
-    <div id="app">
+    <div id="app" className={theme}>
       {isLoading ? (
         <div className="loader" hidden={!isLoading}></div>
       ) : (

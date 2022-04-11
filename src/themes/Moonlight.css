@@ -1,0 +1,16 @@
+.moonlight .ticket__icon::before {
+    color: white;
+}
+
+.moonlight .ticket__subtitle {
+    color: white;
+}
+
+.moonlight .loader {
+    background: var(--dark);
+}
+
+.moonlight .loader::before {
+    border: 6px solid white;
+    border-top-color: #3BDC96;
+}
