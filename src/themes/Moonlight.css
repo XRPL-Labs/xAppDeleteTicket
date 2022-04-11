@@ -14,3 +14,11 @@
     border: 6px solid white;
     border-top-color: #3BDC96;
 }
+
+.moonlight .ticket--success .ticket__icon {
+    border: none;
+}
+
+.moonlight .ticket--success .ticket__icon::before {
+    color: #3BDC96;
+}
