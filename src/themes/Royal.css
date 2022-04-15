@@ -1,0 +1,24 @@
+.royal .ticket__icon::before {
+    color: white;
+}
+
+.royal .ticket__subtitle {
+    color: white;
+}
+
+.royal .loader {
+    background: var(--dark);
+}
+
+.royal .loader::before {
+    border: 6px solid white;
+    border-top-color: #3BDC96;
+}
+
+.royal .ticket--success .ticket__icon {
+    border: none;
+}
+
+.royal .ticket--success .ticket__icon::before {
+    color: #3BDC96;
+}

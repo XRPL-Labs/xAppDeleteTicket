@@ -1,0 +1,24 @@
+.dark .ticket__icon::before {
+    color: white;
+}
+
+.dark .ticket__subtitle {
+    color: white;
+}
+
+.dark .loader {
+    background: var(--dark);
+}
+
+.dark .loader::before {
+    border: 6px solid white;
+    border-top-color: #3BDC96;
+}
+
+.dark .ticket--success .ticket__icon {
+    border: none;
+}
+
+.dark .ticket--success .ticket__icon::before {
+    color: #3BDC96;
+}
