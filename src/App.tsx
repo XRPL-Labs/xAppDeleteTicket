@@ -10,7 +10,8 @@ dotenv.config();
 const url = new URL(window.location.href);
 const xAppToken = url.searchParams.get("xAppToken") || '';
 const theme = url.searchParams.get('xAppStyle') || '';
-const Sdk = new XummSdkJwt('8b57456f-fb8e-4699-a66c-989253d361d5', xAppToken);
+const apiKey = process.env.REACT_APP_XUMM_APP_KEY;
+const Sdk = new XummSdkJwt(apiKey || '', xAppToken);
 const client = new XrplClient();
 
 function App() {
