@@ -19,12 +19,13 @@ function App() {
   const [tickets, setTickets] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [fetchTickets, setFetchTickets] = useState(false);
-  const [hasError, setHasError] = useState(true);
+  const [hasError, setHasError] = useState(false);
 
   useEffect(() => {
     Sdk.getOttData().then((c: any) => {
       setUser(c.account_info);
     }).catch(e => {
+      setHasError(true);
       console.log('error', e);
     })
   }, [])
@@ -34,6 +35,7 @@ function App() {
       setIsLoading(true);
       if (!user?.account) {
         setIsLoading(false);
+        // setHasError(true);
         return;
       }
       client.send({
