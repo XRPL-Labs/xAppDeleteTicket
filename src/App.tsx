@@ -17,7 +17,7 @@ const client = new XrplClient();
 function App() {
   const [user, setUser] = useState<AnyJson>();
   const [tickets, setTickets] = useState([]);
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const [fetchTickets, setFetchTickets] = useState(false);
   const [hasError, setHasError] = useState(true);
 
