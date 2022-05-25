@@ -33,9 +33,9 @@ function App() {
   useEffect(() => {
     const fetchObjects = () => {
       setIsLoading(true);
-      if (!user?.account) {
+      if (!user?.account || user.accountaccess === "READONLY") {
         setIsLoading(false);
-        // setHasError(true);
+        setHasError(true);
         return;
       }
       client.send({
