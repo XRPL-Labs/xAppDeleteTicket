@@ -19,6 +19,7 @@ function App() {
   const [tickets, setTickets] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [fetchTickets, setFetchTickets] = useState(false);
+  const [hasError, setHasError] = useState(false);
 
   useEffect(() => {
     Sdk.getOttData().then((c: any) => {
@@ -31,7 +32,11 @@ function App() {
   useEffect(() => {
     const fetchObjects = () => {
       setIsLoading(true);
-      if (!user?.account) return;
+      if (!user?.account) {
+        setIsLoading(false);
+        setHasError(true);
+        return;
+      }
       client.send({
         command: "account_objects",
         account: user?.account,
@@ -106,7 +111,15 @@ function App() {
             </li>
           })}
 
-          {tickets.length === 0 &&
+          {hasError &&
+            <li className="ticket ticket--error">
+              <div className="ticket__row">
+                <span className="ticket__icon"></span> There was an error. Did you use a read-only account? Try reloading the xApp or contact support to fix this problem.
+              </div>
+            </li>
+          }
+
+          {tickets.length === 0 && !hasError &&
             <li className="ticket ticket--success">
               <div className="ticket__row">
                 <span className="ticket__icon"></span> No tickets found
@@ -114,7 +127,8 @@ function App() {
             </li>
           }
         </ul>
-      )}
+      )
+      }
     </div >
   );
 }

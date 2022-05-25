@@ -19,7 +19,7 @@ ul {
 }
 
 .ticket__row {
-    background-color: rgba(255,255,255,0.1);
+    background-color: rgba(255, 255, 255, 0.1);
     justify-content: space-between;
     align-items: center;
     display: flex;
@@ -77,6 +77,17 @@ ul {
     transform: scale(1.05);
 }
 
+.ticket--error .ticket__row {
+    border-color: #FF5B5B;
+    background: rgba(#FFF5F5, 0.06);
+    padding-left: 18px;
+    justify-content: flex-start;
+}
+
+.ticket--error .ticket__icon::before {
+    content: '\0021';
+}
+
 .ticket--success .ticket__row {
     border-color: #3BDC96;
     background: #3BDC9610;
@@ -97,6 +108,7 @@ ul {
     align-items: center;
     justify-content: center;
 }
+
 .loader::before {
     content: '';
     width: 15vw;
@@ -123,14 +135,17 @@ ul {
         transform: scale(0);
         opacity: 0;
     }
+
     50% {
         transform: scale(1.25);
         opacity: 0.4;
     }
+
     75% {
         transform: scale(0.9);
         opacity: 0.7;
     }
+
     100% {
         transform: scale(1);
         opacity: 1;
