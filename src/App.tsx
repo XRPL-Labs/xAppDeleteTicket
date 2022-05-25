@@ -111,7 +111,7 @@ function App() {
             </li>
           })}
 
-          {hasError === true &&
+          {hasError === true && !isLoading &&
             <li className="ticket ticket--error">
               <div className="ticket__row">
                 <span className="ticket__icon"></span> There was an error. Did you use a read-only account? Try reloading the xApp or contact support to fix this problem.
