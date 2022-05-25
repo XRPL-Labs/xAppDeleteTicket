@@ -86,6 +86,10 @@ ul {
 
 .ticket--error .ticket__icon::before {
     content: '\0021';
+    width: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .ticket--success .ticket__row {
